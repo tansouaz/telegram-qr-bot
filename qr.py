@@ -36,7 +36,7 @@ def main():
 
     app.add_handler(CommandHandler("start", start))
 
-    print("🤖 Bot is running...")
+    print("🤖 Bot is running v2...")
     app.run_polling()
 
 if __name__ == "__main__":
