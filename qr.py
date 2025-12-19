@@ -3,7 +3,8 @@ from telegram.ext import ApplicationBuilder, MessageHandler, ContextTypes, filte
 import qrcode
 import os
 
-TOKEN = "8582274278:AAHly6OuFIFDOkH2P0yTdamDBVXRJsYBwKQ"
+# TOKEN = "8275593957:AAGGWRzcIzevxlyKrGUH--MTkKfGyWfxt7Y"
+TOKEN = os.environ.get("BOT_TOKEN")
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
