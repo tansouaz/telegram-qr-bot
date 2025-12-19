@@ -24,16 +24,22 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
 
+    if query.data == "back":
+        context.user_data.clear()
+        await start(query, context)
+        return   # ⬅️ خیلی مهم
+    
     context.user_data["mode"] = query.data
 
     messages = {
-        "website": "🔗 Send website URL:",
+        "website": "🌐 Send website URL:",
         "whatsapp": "📱 Send WhatsApp number (example: +989123456789):",
         "instagram": "📸 Send Instagram username (without @):",
         "location": "📍 Send Google Maps link:"
     }
 
     await query.message.reply_text(messages[query.data])
+
 
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -66,7 +72,17 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     file_name = "qr.png"
     img.save(file_name)
     
-    await update.message.reply_photo(photo=open(file_name, "rb"))
+    keyboard = [
+    [InlineKeyboardButton("🔙 Back to Menu", callback_data="back")]
+]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    await update.message.reply_photo(
+    photo=open(file_name, "rb"),
+    caption="✅ QR Code generated successfully",
+    reply_markup=reply_markup
+)
+
     os.remove(file_name)
 
 
@@ -81,7 +97,10 @@ def main():
     
     app.add_handler(CommandHandler("start", start))
     
+    app.add_handler(CallbackQueryHandler(button_handler))
+    
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    
 
 
     print("🤖 Bot is running v2...")
